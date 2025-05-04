@@ -1,3 +1,5 @@
+bindir = /bin
+
 all: nbfc-qt.py
 
 nbfc-qt.py: \
