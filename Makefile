@@ -18,6 +18,9 @@ nbfc-qt.py: \
 	(cd ./src; python3 ./include_files.py main.py > ../nbfc-qt.py)
 	chmod +x nbfc-qt.py
 
+README.md: README.md.in
+	./tools/update_readme.py README.md.in > README.md
+
 install:
 	install -Dm 755 nbfc-qt.py $(DESTDIR)$(bindir)/nbfc-qt
 

@@ -1,0 +1,30 @@
+NBFC-Qt - GUI for NBFC-Linux
+============================
+
+**nbfc-qt** is a simple Qt-based graphical user interface for [nbfc-linux](https://github.com/nbfc-linux/nbfc-linux).
+
+Installation
+------------
+
+- Arch Linux:
+  - [Latest Version %TAG%](%ARCHLINUX_URL%)
+  - Install PyQt5: `pacman -S python-pyqt5`
+  - Install package: `pacman -U ./%ARCHLINUX_PACKAGE%`
+
+- Debian / Ubuntu:
+  - [Latest Version %TAG%](%DEBIAN_URL%)
+  - Install PyQt5: `apt install python3-pyqt5`
+  - Install package: `dpkg -i ./%DEBIAN_PACKAGE%`
+
+- Fedora:
+  - [Latest Version %TAG%](%FEDORA_URL%)
+  - Install PyQt5: `dnf install python3-qt5`
+  - Install package: `dnf install ./%FEDORA_PACKAGE%`
+
+- OpenSuse (Tumbleweed):
+  - [Latest Version %TAG%](%OPENSUSE_URL%)
+  - Install PyQt5: `zypper install python3-qt5`
+  - Install package: `zypper install ./%OPENSUSE_PACKAGE%`
+
+- In general:
+  - make && sudo make install
