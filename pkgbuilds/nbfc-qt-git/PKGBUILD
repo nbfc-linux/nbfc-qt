@@ -1,0 +1,34 @@
+# Maintainer: Benjamin Abendroth <braph93@gmx.de>
+
+pkgname=nbfc-qt-git
+_pkgname=nbfc-qt
+pkgver=0.3.11
+pkgrel=1
+pkgdesc="GUI for NBFC-Linux (Qt-based)"
+arch=('i686' 'x86_64')
+url="https://github.com/nbfc-linux/nbfc-qt"
+makedepends=('git')
+depends=('python-pyqt5')
+license=('GPL3')
+source=("${_pkgname}::git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${srcdir}/${_pkgname}"
+
+  cat VERSION
+}
+
+build() {
+	cd "${srcdir}/${_pkgname}"
+
+  make
+}
+
+package() {
+	cd "${srcdir}/${_pkgname}"
+
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
