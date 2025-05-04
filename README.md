@@ -3,6 +3,8 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt** is a simple Qt-based graphical user interface for [nbfc-linux](https://github.com/nbfc-linux/nbfc-linux).
 
+**nbfc-qt-tray** is a simple system tray application for controlling fan speeds.
+
 Installation
 ------------
 
