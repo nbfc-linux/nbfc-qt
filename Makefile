@@ -1,4 +1,4 @@
-bindir = /bin
+bindir = /usr/bin
 
 all: nbfc-qt.py
 
