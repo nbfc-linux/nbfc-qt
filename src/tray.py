@@ -2,15 +2,75 @@
 
 import sys
 import base64
+import signal
+import argparse
 
-from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
-    QSlider, QCheckBox, QLabel, QSystemTrayIcon,
-    QMenu, QAction, QMessageBox
-)
+# =============================================================================
+# Make Qt6 compatible with Qt5
+# =============================================================================
 
-from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QIcon, QCursor, QPixmap
+def make_qt5_compatible():
+    setattr(Qt,              'AlignCenter', Qt.AlignmentFlag.AlignCenter)
+    setattr(Qt,              'Popup',       Qt.WindowType.Popup)
+    setattr(Qt,              'Vertical',    Qt.Orientation.Vertical)
+    setattr(Qt,              'Checked',     Qt.CheckState.Checked)
+    setattr(QSystemTrayIcon, 'Trigger',     QSystemTrayIcon.ActivationReason.Trigger)
+
+# =============================================================================
+# NBFC-Qt-Tray Command Line Options
+# =============================================================================
+
+#include qt_help.py
+
+argp = argparse.ArgumentParser(
+    prog='nbfc-qt-tray',
+    description='Qt-based tray app for NBFC-Linux',
+    epilog=QT_HELP_TEXT,
+    formatter_class=argparse.RawDescriptionHelpFormatter)
+
+argp.add_argument('--version', action='version', version='%(prog)s 0.4.0')
+
+grp = argp.add_argument_group(title='Qt version')
+
+grp.add_argument('--qt5',
+    help='Use PyQt5',
+    dest='qt_version', action='store_const', const=5)
+
+grp.add_argument('--qt6',
+    help='Use PyQt6',
+    dest='qt_version', action='store_const', const=6)
+
+opts, qt_args = argp.parse_known_args()
+
+# =============================================================================
+# Import Qt5/Qt6
+# =============================================================================
+
+if opts.qt_version is None:
+    try:
+        from PyQt6.QtWidgets import *
+        from PyQt6.QtCore import Qt, QPoint
+        from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap
+        make_qt5_compatible()
+    except ImportError:
+        try:
+            from PyQt5.QtWidgets import *
+            from PyQt5.QtCore import Qt, QPoint
+            from PyQt5.QtGui import QIcon, QCursor, QPixmap
+        except ImportError:
+            print("Please install Python Qt bindings (PyQt5 or PyQt6)")
+            sys.exit(1)
+
+elif opts.qt_version == 5:
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtCore import Qt, QPoint
+    from PyQt5.QtGui import QIcon, QCursor, QPixmap
+
+elif opts.qt_version == 6:
+    from PyQt6.QtWidgets import *
+    from PyQt6.QtCore import Qt, QPoint
+    from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap
+    make_qt5_compatible()
 
 #include nbfc_client.py
 #include ico.py
@@ -24,7 +84,7 @@ def get_icon():
     return QIcon(pix)
 
 class FanWidget(QWidget):
-    def __init__(self, fan_info: dict, index: int):
+    def __init__(self, index, fan_info):
         super().__init__()
         self.index = index
         layout = QVBoxLayout(self)
@@ -55,16 +115,16 @@ class FanWidget(QWidget):
         speed = val / 10.0
         try:
             NBFC_CLIENT.set_fan_speed(speed, self.index)
-        except Exception:
-            pass  # ignore failures
+        except Exception as e:
+            print('Error:', e, file=sys.stderr)
 
     def _on_auto_toggle(self, state):
-        auto = (state == Qt.Checked)
+        auto = self.checkbox.isChecked()
         self.slider.setEnabled(not auto)
         try:
             NBFC_CLIENT.set_fan_speed("auto" if auto else self.slider.value() / 10.0, self.index)
-        except Exception:
-            pass  # ignore failures
+        except Exception as e:
+            print('Error:', e, file=sys.stderr)
 
 
 class FanControlWidget(QWidget):
@@ -84,16 +144,16 @@ class FanControlWidget(QWidget):
             return False
 
         # Clear old widgets
-        for fw in self.fan_widgets:
-            self.layout.removeWidget(fw)
-            fw.deleteLater()
+        for widget in self.fan_widgets:
+            self.layout.removeWidget(widget)
+            widget.deleteLater()
         self.fan_widgets.clear()
 
         # Create new FanWidgets
         for idx, fan_info in enumerate(status.get("Fans", [])):
-            fw = FanWidget(fan_info, idx)
-            self.layout.addWidget(fw)
-            self.fan_widgets.append(fw)
+            widget = FanWidget(idx, fan_info)
+            self.layout.addWidget(widget)
+            self.fan_widgets.append(widget)
 
         self.adjustSize()
         return True
@@ -115,12 +175,11 @@ class FanControlWidget(QWidget):
 
 class TrayApp:
     def __init__(self):
-        self.app = QApplication(sys.argv)
+        self.app = QApplication([sys.argv[0]] + qt_args)
         self.app.setQuitOnLastWindowClosed(False)
         self.ctrl = FanControlWidget()
 
         # Tray icon
-        icon = QIcon.fromTheme("preferences-system")
         self.tray = QSystemTrayIcon(get_icon(), self.app)
         self.tray.setToolTip("Fan Controller")
 
@@ -143,7 +202,10 @@ class TrayApp:
                 self.ctrl.show_at_cursor()
 
     def run(self):
-        sys.exit(self.app.exec_())
+        sys.exit(self.app.exec())
 
 if __name__ == "__main__":
+    # Make CTLR+C work
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
     TrayApp().run()

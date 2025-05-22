@@ -5,17 +5,23 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt-tray** is a simple system tray application for controlling fan speeds.
 
+Both programs support both PyQt5 and PyQt6.
+
 Installation
 ------------
 
 - Arch Linux:
   - [Latest Version %TAG%](%ARCHLINUX_URL%)
-  - Install PyQt5: `pacman -S python-pyqt5`
+  - Install one of the following dependencies (PyQt6 is recommended):
+    - PyQt6: `pacman -S python-pyqt6`
+    - PyQt5: `pacman -S python-pyqt5`
   - Install package: `pacman -U ./%ARCHLINUX_PACKAGE%`
 
 - Debian / Ubuntu:
   - [Latest Version %TAG%](%DEBIAN_URL%)
-  - Install PyQt5: `apt install python3-pyqt5`
+  - Install one of the following dependencies (PyQt6 is recommended):
+    - PyQt5: `apt install python3-pyqt5`
+    - PyQt6: `apt install python3-pyqt6`
   - Install package: `dpkg -i ./%DEBIAN_PACKAGE%`
 
 - Fedora:

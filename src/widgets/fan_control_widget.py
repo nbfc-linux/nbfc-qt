@@ -2,9 +2,17 @@ class FanControlWidget(QStackedWidget):
     def __init__(self):
         super().__init__()
 
+        # =====================================================================
+        # Timer
+        # =====================================================================
+
         self.timer = QTimer(self)
         self.timer.setInterval(500)
         self.timer.timeout.connect(self.update)
+
+        # =====================================================================
+        # Error Widget
+        # =====================================================================
 
         self.error_widget = QWidget()
         error_layout = QVBoxLayout()
@@ -12,6 +20,10 @@ class FanControlWidget(QStackedWidget):
         self.error_label = QLabel("", self)
         error_layout.addWidget(self.error_label)
         self.addWidget(self.error_widget)
+
+        # =====================================================================
+        # Contents (QScrollArea)
+        # =====================================================================
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
@@ -21,6 +33,10 @@ class FanControlWidget(QStackedWidget):
         self.scroll_area.setWidget(fans_widget)
         self.addWidget(self.scroll_area)
 
+    # =========================================================================
+    # Widget start / stop
+    # =========================================================================
+
     def start(self):
         self.update()
         self.timer.start()
@@ -28,9 +44,13 @@ class FanControlWidget(QStackedWidget):
     def stop(self):
         self.timer.stop()
 
+    # =========================================================================
+    # Helper functions
+    # =========================================================================
+
     def update(self):
         try:
-            status = NBFC_CLIENT.get_status()
+            status = GLOBALS.nbfc_client.get_status()
             self.setCurrentWidget(self.scroll_area)
         except Exception as e:
             self.error_label.setText(str(e))
@@ -49,4 +69,3 @@ class FanControlWidget(QStackedWidget):
         for fan_index, fan_data in enumerate(status['Fans']):
             widget = self.fans_layout.itemAt(fan_index).widget()
             widget.update(fan_index, fan_data)
-
