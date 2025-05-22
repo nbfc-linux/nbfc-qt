@@ -5,29 +5,42 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt-tray** is a simple system tray application for controlling fan speeds.
 
+Both programs support both PyQt5 and PyQt6.
+
 Installation
 ------------
 
 - Arch Linux:
-  - [Latest Version 0.3.12](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.3.12/nbfc-qt-git-0.3.12-1-x86_64.pkg.tar.zst)
-  - Install PyQt5: `pacman -S python-pyqt5`
-  - Install package: `pacman -U ./nbfc-qt-git-0.3.12-1-x86_64.pkg.tar.zst`
+  - [Latest Version 0.4.0](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.0/nbfc-qt-git-0.4.0-1-x86_64.pkg.tar.zst)
+  - Install one of the following dependencies (PyQt6 is recommended):
+    - PyQt6: `pacman -S python-pyqt6`
+    - PyQt5: `pacman -S python-pyqt5`
+  - Install package: `pacman -U ./nbfc-qt-git-0.4.0-1-x86_64.pkg.tar.zst`
 
 - Debian / Ubuntu:
-  - [Latest Version 0.3.12](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.3.12/nbfc-qt_0.3.12_amd64.deb)
-  - Install PyQt5: `apt install python3-pyqt5`
-  - Install package: `dpkg -i ./nbfc-qt_0.3.12_amd64.deb`
+  - [Latest Version 0.4.0](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.0/nbfc-qt_0.4.0_amd64.deb)
+  - Install one of the following dependencies (PyQt6 is recommended):
+    - PyQt5: `apt install python3-pyqt5`
+    - PyQt6: `apt install python3-pyqt6`
+  - Install package: `dpkg -i ./nbfc-qt_0.4.0_amd64.deb`
 
 - Fedora:
-  - [Latest Version 0.3.12](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.3.12/fedora-nbfc-qt-0.3.12-1.x86_64.rpm)
+  - [Latest Version 0.4.0](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.0/fedora-nbfc-qt-0.4.0-1.x86_64.rpm)
   - Install PyQt5: `dnf install python3-qt5`
-  - Install package: `dnf install ./fedora-nbfc-qt-0.3.12-1.x86_64.rpm`
+  - Install package: `dnf install ./fedora-nbfc-qt-0.4.0-1.x86_64.rpm`
 
 - OpenSuse (Tumbleweed):
-  - [Latest Version 0.3.12](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.3.12/opensuse-nbfc-qt-0.3.12-1.x86_64.rpm)
+  - [Latest Version 0.4.0](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.0/opensuse-nbfc-qt-0.4.0-1.x86_64.rpm)
   - Install PyQt5: `zypper install python3-qt5`
-  - Install package: `zypper install ./opensuse-nbfc-qt-0.3.12-1.x86_64.rpm`
+  - Install package: `zypper install ./opensuse-nbfc-qt-0.4.0-1.x86_64.rpm`
 
 - In general:
   - make && sudo make install
+
+Usage
+-----
+
+For **configuring** and **starting** the NBFC service, run `sudo nbfc-qt`.
+
+For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root priviliges.
 

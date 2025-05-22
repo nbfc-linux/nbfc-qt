@@ -36,3 +36,10 @@ Installation
 
 - In general:
   - make && sudo make install
+
+Usage
+-----
+
+For **configuring** and **starting** the NBFC service, run `sudo nbfc-qt`.
+
+For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root priviliges.
