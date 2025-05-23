@@ -44,3 +44,16 @@ For **configuring** and **starting** the NBFC service, run `sudo nbfc-qt`.
 
 For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root priviliges.
 
+Screenshots
+-----------
+
+![Screenshot NBFC-Qt Service control](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-service.png)
+
+![Screenshot NBFC-Qt Fan Control](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-fans.png)
+
+![Screenshot NBFC-Qt Basic Configuration](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-basic.png)
+
+![Screenshot NBFC-Qt Sensor Configuration](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-sensors.png)
+
+![Screenshot NBFC-Qt Update](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-update.png)
+
