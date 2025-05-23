@@ -150,7 +150,7 @@ class TemperatureSourceWidget(QWidget):
         elif self.max_radio.isChecked():
             algorithm = 'Max'
         elif self.min_radio.isChecked():
-            algorithm  = 'Min'
+            algorithm = 'Min'
 
         cfg = {'FanIndex': self.fan_index}
 

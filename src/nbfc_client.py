@@ -59,7 +59,7 @@ class NbfcClient:
 
         try:
             result = subprocess.run(command, capture_output=True, text=True, check=False)
-        except FileNotFoundError:
+        except FileNotFoundError as e:
             raise NbfcClientError('Could not find the `nbfc` program. Is NBFC-Linux installed?') from e
 
         if result.returncode != 0:
