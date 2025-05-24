@@ -126,9 +126,15 @@ class TemperatureSourceWidget(QWidget):
 
         if data == '<custom>':
             text = self.custom_sensor.text()
+            if not text.strip():
+                return
+
             data = text
         elif data == '<command>':
             text = '$ %s' % self.custom_sensor.text()
+            if not text.strip():
+                return
+
             data = text
 
         new_item = QListWidgetItem(text)

@@ -76,10 +76,14 @@ class FanWidget(QWidget):
         layout.addWidget(self.speed_slider)
 
     def update_fan_speed(self, *_):
-        if self.auto_mode_checkbox.isChecked():
+        auto_mode = self.auto_mode_checkbox.isChecked()
+
+        if auto_mode:
             GLOBALS.nbfc_client.set_fan_speed('auto', self.fan_index)
         else:
             GLOBALS.nbfc_client.set_fan_speed(self.speed_slider.value(), self.fan_index)
+
+        self.speed_slider.setEnabled(not auto_mode)
 
     def update(self, fan_index, fan_data):
         self.fan_index = fan_index
