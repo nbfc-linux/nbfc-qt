@@ -11,26 +11,26 @@ Installation
 ------------
 
 - Arch Linux:
-  - [Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/nbfc-qt-git-0.4.1-1-any.pkg.tar.zst)
+  - [Download Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/nbfc-qt-git-0.4.1-1-any.pkg.tar.zst)
   - Install one of the following dependencies (PyQt6 is recommended):
     - PyQt6: `pacman -S python-pyqt6`
     - PyQt5: `pacman -S python-pyqt5`
   - Install package: `pacman -U ./nbfc-qt-git-0.4.1-1-any.pkg.tar.zst`
 
 - Debian / Ubuntu:
-  - [Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/nbfc-qt_0.4.1_amd64.deb)
+  - [Download Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/nbfc-qt_0.4.1_amd64.deb)
   - Install one of the following dependencies (PyQt6 is recommended):
     - PyQt5: `apt install python3-pyqt5`
     - PyQt6: `apt install python3-pyqt6`
   - Install package: `dpkg -i ./nbfc-qt_0.4.1_amd64.deb`
 
 - Fedora:
-  - [Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/fedora-nbfc-qt-0.4.1-1.x86_64.rpm)
+  - [Download Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/fedora-nbfc-qt-0.4.1-1.x86_64.rpm)
   - Install PyQt5: `dnf install python3-qt5`
   - Install package: `dnf install ./fedora-nbfc-qt-0.4.1-1.x86_64.rpm`
 
 - OpenSuse (Tumbleweed):
-  - [Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/opensuse-nbfc-qt-0.4.1-1.x86_64.rpm)
+  - [Download Latest Version 0.4.1](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.1/opensuse-nbfc-qt-0.4.1-1.x86_64.rpm)
   - Install PyQt5: `zypper install python3-qt5`
   - Install package: `zypper install ./opensuse-nbfc-qt-0.4.1-1.x86_64.rpm`
 
@@ -42,7 +42,7 @@ Usage
 
 For **configuring** and **starting** the NBFC service, run `sudo nbfc-qt`.
 
-For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root priviliges.
+For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root privileges.
 
 Screenshots
 -----------
