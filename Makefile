@@ -33,8 +33,11 @@ src/ico.py:
 	base64 fan.ico           >> src/ico.py
 	echo "'''"               >> src/ico.py
 
-README.md: README.md.in
+README.md: .force
 	./tools/update_readme.py README.md.in > README.md
+
+pkgbuilds/nbfc-qt/PKGBUILD: .force
+	./tools/update_pkgbuild.py pkgbuilds/nbfc-qt/PKGBUILD.in > pkgbuilds/nbfc-qt/PKGBUILD
 
 install:
 	install -Dm 755 nbfc-qt.py $(DESTDIR)$(bindir)/nbfc-qt
@@ -48,3 +51,6 @@ clean:
 	rm -rf __pycache__
 	rm -f  nbfc-qt.py nbfc-qt-tray.py
 	rm -f  src/ico.py
+
+.force:
+	@true
