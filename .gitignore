@@ -1,4 +1,5 @@
 __pycache__
 nbfc-qt.py
 nbfc-qt-tray.py
+nbfc-qt-config.py
 src/ico.py

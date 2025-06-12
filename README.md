@@ -5,7 +5,9 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt-tray** is a simple system tray application for controlling fan speeds.
 
-Both programs support both PyQt5 and PyQt6.
+**nbfc-qt-config** is a GUI for creating and editing model configuration files. (**NOT YET RELEASED**)
+
+ALl programs support both PyQt5 and PyQt6.
 
 Installation
 ------------
@@ -42,10 +44,14 @@ Usage
 
 For **configuring** and **starting** the NBFC service, run `sudo nbfc-qt`.
 
-For controlling the fans using the system tray app, run `nbfc-qt-tray`. This does not required root privileges.
+For **controlling** the fans using the system tray app, run `nbfc-qt-tray`. This does not required root privileges.
+
+For **editing** model configuration files, use `nbfc-qt-config`.
 
 Screenshots
 -----------
+
+## NBFC-Qt
 
 ![Screenshot NBFC-Qt Service control](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-service.png)
 
@@ -56,4 +62,16 @@ Screenshots
 ![Screenshot NBFC-Qt Sensor Configuration](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-sensors.png)
 
 ![Screenshot NBFC-Qt Update](http://nbfc-linux.github.io/img/nbfc-qt/nbfc-qt-update.png)
+
+## NBFC-Qt-Config
+
+![Screenshot of NBFC-Qt-Config Basic Configuration](http://nbfc-linux.github.io/img/nbfc-qt-config/nbfc-qt-config-basic.png)
+
+![Screenshot of NBFC-Qt-Config Basic Fan Configuration](http://nbfc-linux.github.io/img/nbfc-qt-config/nbfc-qt-config-fan-basic.png)
+
+![Screenshot of NBFC-Qt-Config Fan Temperature Thresholds](http://nbfc-linux.github.io/img/nbfc-qt-config/nbfc-qt-config-fan-temperature-thresholds.png)
+
+![Screenshot of NBFC-Qt-Config Fan Speed Overrides](http://nbfc-linux.github.io/img/nbfc-qt-config/nbfc-qt-config-fan-speed-overrides.png)
+
+![Screenshot of NBFC-Qt-Config Register Write Configurations](http://nbfc-linux.github.io/img/nbfc-qt-config/nbfc-qt-config-register-write-configurations.png)
 

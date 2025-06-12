@@ -20,7 +20,7 @@ def make_qt5_compatible():
 # NBFC-Qt-Tray Command Line Options
 # =============================================================================
 
-#include qt_help.py
+#include common/qt_help.py
 
 argp = argparse.ArgumentParser(
     prog='nbfc-qt-tray',
@@ -72,7 +72,7 @@ elif opts.qt_version == 6:
     from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap
     make_qt5_compatible()
 
-#include nbfc_client.py
+#include common/nbfc_client.py
 #include ico.py
 
 NBFC_CLIENT = NbfcClient()

@@ -20,7 +20,7 @@ def make_qt5_compatible():
 # NBFC-Qt Command Line Options
 # =============================================================================
 
-#include qt_help.py
+#include common/qt_help.py
 
 argp = argparse.ArgumentParser(
     prog='nbfc-qt',
@@ -96,11 +96,11 @@ elif opts.qt_version == 6:
 # Program
 # =============================================================================
 
-#include about.py
-#include common.py
-#include errors.py
-#include nbfc_client.py
-#include version.py
+#include client/common.py
+#include client/errors.py
+#include common/about.py
+#include common/nbfc_client.py
+#include common/version.py
 
 class Globals(QObject):
     model_config_changed = pyqtSignal()
@@ -119,16 +119,16 @@ GLOBALS = Globals()
 def show_error_message(parent, title, message):
     QMessageBox.critical(parent, title, message, QMessageBox.Ok)
 
-#include subprocess_worker.py
-#include widgets/apply_button_widget.py
-#include widgets/service_control_widget.py
-#include widgets/fan_widget.py
-#include widgets/fan_control_widget.py
-#include widgets/basic_config_widget.py
-#include widgets/temperature_source_widget.py
-#include widgets/temperature_sources_widget.py
-#include widgets/update_widget.py
-#include widgets/main_window.py
+#include client/subprocess_worker.py
+#include client/widgets/apply_button_widget.py
+#include client/widgets/service_control_widget.py
+#include client/widgets/fan_widget.py
+#include client/widgets/fan_control_widget.py
+#include client/widgets/basic_config_widget.py
+#include client/widgets/temperature_source_widget.py
+#include client/widgets/temperature_sources_widget.py
+#include client/widgets/update_widget.py
+#include client/widgets/main_window.py
 
 # Make CTLR+C work
 signal.signal(signal.SIGINT, signal.SIG_DFL)
