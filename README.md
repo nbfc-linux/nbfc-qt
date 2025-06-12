@@ -7,7 +7,7 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt-config** is a GUI for creating and editing model configuration files. (**NOT YET RELEASED**)
 
-ALl programs support both PyQt5 and PyQt6.
+All programs support both PyQt5 and PyQt6.
 
 Installation
 ------------
