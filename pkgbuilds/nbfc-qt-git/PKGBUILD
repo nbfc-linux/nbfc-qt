@@ -2,13 +2,13 @@
 
 pkgname=nbfc-qt-git
 _pkgname=nbfc-qt
-pkgver=0.4.1
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="GUI for NBFC-Linux (Qt-based)"
 arch=('any')
 url="https://github.com/nbfc-linux/nbfc-qt"
 makedepends=('git')
-depends=('python-pyqt5')
+depends=('python-pyqt6')
 license=('GPL3')
 source=("${_pkgname}::git+${url}.git")
 sha256sums=('SKIP')
