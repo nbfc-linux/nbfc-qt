@@ -1,7 +1,7 @@
 # Maintainer: Benjamin Abendroth <braph93@gmx.de>
 
 pkgname=nbfc-qt
-pkgver=0.4.1
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="Graphical User Interface (GUI) for NBFC-Linux (Qt-based)"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=('python3')
 depends=('nbfc-linux>=0.3.17' 'python-pyqt6')
 license=('GPL-3.0-only')
 source=("https://github.com/nbfc-linux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('005467bc4225fefcce4985d5d0f357d199c3453700ca9d5042acd4690de72aa1')
+sha256sums=('058143ab914b42be53804a69ec65081d7bc09e6fa30e3332a8ecb39f102c0c7b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
