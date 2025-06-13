@@ -5,7 +5,7 @@ NBFC-Qt - GUI for NBFC-Linux
 
 **nbfc-qt-tray** is a simple system tray application for controlling fan speeds.
 
-**nbfc-qt-config** is a GUI for creating and editing model configuration files. (**NOT YET RELEASED**)
+**nbfc-qt-config** is a GUI for creating and editing model configuration files. (**Alpha, not yet released in packages**)
 
 All programs support both PyQt5 and PyQt6.
 

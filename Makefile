@@ -1,6 +1,6 @@
 bindir = /usr/bin
 
-all: nbfc-qt.py nbfc-qt-tray.py  # nbfc-qt-config.py
+all: nbfc-qt.py nbfc-qt-tray.py nbfc-qt-config.py
 
 nbfc-qt.py: \
 	src/common/about.py \
@@ -60,7 +60,7 @@ pkgbuilds/nbfc-qt/PKGBUILD: .force
 install:
 	install -Dm 755 nbfc-qt.py $(DESTDIR)$(bindir)/nbfc-qt
 	install -Dm 755 nbfc-qt-tray.py $(DESTDIR)$(bindir)/nbfc-qt-tray
-	#install -Dm 755 nbfc-qt-config.py $(DESTDIR)$(bindir)/nbfc-qt-config
+	install -Dm 755 nbfc-qt-config.py $(DESTDIR)$(bindir)/nbfc-qt-config
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/nbfc-qt
