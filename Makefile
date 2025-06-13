@@ -1,6 +1,10 @@
 bindir = /usr/bin
 
-all: nbfc-qt.py nbfc-qt-tray.py nbfc-qt-config.py
+# Set this to the desired Qt-Version (5 or 6).
+# Zero means all versions shall be supported.
+QT_VERSION ?= 0
+
+all: nbfc-qt.py nbfc-qt-tray.py # nbfc-qt-config.py
 
 nbfc-qt.py: \
 	src/common/about.py \
@@ -18,7 +22,7 @@ nbfc-qt.py: \
 	src/client/widgets/temperature_source_widget.py \
 	src/client/widgets/update_widget.py \
 	src/client/main.py
-	python3 ./src/preprocessor.py --chdir src client/main.py > nbfc-qt.py
+	python3 ./src/preprocessor.py --chdir src --define QT_VERSION=$(QT_VERSION) client/main.py > nbfc-qt.py
 	chmod +x nbfc-qt.py
 
 nbfc-qt-config.py: \
@@ -36,14 +40,14 @@ nbfc-qt-config.py: \
 	src/config/widgets/fan_configurations_widget.py \
 	src/config/widgets/register_write_configurations_widget.py \
 	src/config/widgets/main_window.py
-	python3 ./src/preprocessor.py --chdir src config/main.py > nbfc-qt-config.py
+	python3 ./src/preprocessor.py --chdir src --define QT_VERSION=$(QT_VERSION) config/main.py > nbfc-qt-config.py
 	chmod +x nbfc-qt-config.py
 
 nbfc-qt-tray.py: \
 	src/common/nbfc_client.py \
 	src/tray/main.py \
 	src/ico.py
-	python3 ./src/preprocessor.py --chdir src tray/main.py > nbfc-qt-tray.py
+	python3 ./src/preprocessor.py --chdir src --define QT_VERSION=$(QT_VERSION) tray/main.py > nbfc-qt-tray.py
 	chmod +x nbfc-qt-tray.py
 
 src/ico.py:
@@ -60,7 +64,7 @@ pkgbuilds/nbfc-qt/PKGBUILD: .force
 install:
 	install -Dm 755 nbfc-qt.py $(DESTDIR)$(bindir)/nbfc-qt
 	install -Dm 755 nbfc-qt-tray.py $(DESTDIR)$(bindir)/nbfc-qt-tray
-	install -Dm 755 nbfc-qt-config.py $(DESTDIR)$(bindir)/nbfc-qt-config
+	#install -Dm 755 nbfc-qt-config.py $(DESTDIR)$(bindir)/nbfc-qt-config
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/nbfc-qt

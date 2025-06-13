@@ -52,6 +52,7 @@ grp.add_argument('--update',
     help='Start with update widget',
     dest='widget', action='store_const', const='update')
 
+#ifeq QT_VERSION 0
 grp = argp.add_argument_group(title='Qt version')
 
 grp.add_argument('--qt5',
@@ -61,6 +62,7 @@ grp.add_argument('--qt5',
 grp.add_argument('--qt6',
     help='Use PyQt6',
     dest='qt_version', action='store_const', const=6)
+#endif
 
 opts, qt_args = argp.parse_known_args()
 
@@ -68,6 +70,7 @@ opts, qt_args = argp.parse_known_args()
 # Import Qt5/Qt6
 # =============================================================================
 
+#ifeq QT_VERSION 0
 if opts.qt_version is None:
     try:
         from PyQt6.QtWidgets import *
@@ -91,6 +94,19 @@ elif opts.qt_version == 6:
     from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
     from PyQt6.QtGui import QAction
     make_qt5_compatible()
+#endif
+
+#ifeq QT_VERSION 5
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
+#endif
+
+#ifeq QT_VERSION 6
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
+from PyQt6.QtGui import QAction
+make_qt5_compatible()
+#endif
 
 # =============================================================================
 # Program

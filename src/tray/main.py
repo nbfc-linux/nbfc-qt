@@ -30,6 +30,7 @@ argp = argparse.ArgumentParser(
 
 argp.add_argument('--version', action='version', version='%(prog)s 0.4.0')
 
+#ifeq QT_VERSION 0
 grp = argp.add_argument_group(title='Qt version')
 
 grp.add_argument('--qt5',
@@ -41,11 +42,13 @@ grp.add_argument('--qt6',
     dest='qt_version', action='store_const', const=6)
 
 opts, qt_args = argp.parse_known_args()
+#endif
 
 # =============================================================================
 # Import Qt5/Qt6
 # =============================================================================
 
+#ifeq QT_VERSION 0
 if opts.qt_version is None:
     try:
         from PyQt6.QtWidgets import *
@@ -71,6 +74,20 @@ elif opts.qt_version == 6:
     from PyQt6.QtCore import Qt, QPoint
     from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap
     make_qt5_compatible()
+#endif
+
+#ifeq QT_VERSION 5
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtGui import QIcon, QCursor, QPixmap
+#endif
+
+#ifeq QT_VERSION 6
+from PyQt6.QtWidgets import *
+from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtGui import QAction, QIcon, QCursor, QPixmap
+make_qt5_compatible()
+#endif
 
 #include common/nbfc_client.py
 #include ico.py
