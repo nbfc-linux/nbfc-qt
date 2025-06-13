@@ -13,8 +13,11 @@ Installation
 ------------
 
 - Arch Linux:
-  - [Download Latest Version %TAG%](%ARCHLINUX_URL%)
-  - Install package: `pacman -U ./%ARCHLINUX_PACKAGE%`
+  - Package is available via the Arch User Repository:
+    - `yay -S nbfc-qt`
+  - Or manually:
+    - [Download Latest Version %TAG%](%ARCHLINUX_URL%)
+    - Install package: `pacman -U ./%ARCHLINUX_PACKAGE%`
 
 - Debian / Ubuntu:
   - [Download Latest Version %TAG%](%DEBIAN_URL%)

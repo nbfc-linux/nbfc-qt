@@ -13,8 +13,11 @@ Installation
 ------------
 
 - Arch Linux:
-  - [Download Latest Version 0.4.2](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.2/nbfc-qt-git-0.4.2-1-any.pkg.tar.zst)
-  - Install package: `pacman -U ./nbfc-qt-git-0.4.2-1-any.pkg.tar.zst`
+  - Package is available via the Arch User Repository:
+    - `yay -S nbfc-qt`
+  - Or manually:
+    - [Download Latest Version 0.4.2](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.2/nbfc-qt-git-0.4.2-1-any.pkg.tar.zst)
+    - Install package: `pacman -U ./nbfc-qt-git-0.4.2-1-any.pkg.tar.zst`
 
 - Debian / Ubuntu:
   - [Download Latest Version 0.4.2](https://github.com/nbfc-linux/nbfc-qt/releases/download/0.4.2/nbfc-qt_0.4.2_amd64.deb)
