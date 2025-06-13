@@ -35,6 +35,10 @@ class PreProcessor:
                     self.order_defines_by_length()
                     continue
 
+                if line.startswith('#!'):
+                    print(line, end='')
+                    continue
+
                 if line.lstrip().startswith('#'):
                     continue
 
