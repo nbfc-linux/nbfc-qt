@@ -158,7 +158,7 @@ class BasicFanConfigWidget(QWidget):
         r['MinSpeedValueRead']           = self.min_fan_speed_read_input.value()
         r['MaxSpeedValueRead']           = self.max_fan_speed_read_input.value()
         r['ResetRequired']               = self.grp_reset_required.isChecked()
-        r['ResetValue']                  = self.reset_value.value()
+        r['FanSpeedResetValue']          = self.reset_value.value()
         r['Sensors']                     = [self.sensor_input.currentText()]
 
         if not r['FanDisplayName']:
@@ -184,7 +184,7 @@ class BasicFanConfigWidget(QWidget):
             'MinSpeedValueRead':           self.min_fan_speed_read_input.setValue,
             'MaxSpeedValueRead':           self.max_fan_speed_read_input.setValue,
             'ResetRequired':               self.grp_reset_required.setChecked,
-            'ResetValue':                  self.reset_value.setValue,
+            'FanSpeedResetValue':          self.reset_value.setValue,
         }
 
         for key, callback in list(callbacks.items()):
