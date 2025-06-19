@@ -105,3 +105,7 @@ class MyTableWidget(QTableWidget):
             return
 
         self.removeRow(row)
+
+    def clear(self):
+        for i in range(self.rowCount()):
+            self.removeRow(0)

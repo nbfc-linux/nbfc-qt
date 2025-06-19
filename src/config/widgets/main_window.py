@@ -27,9 +27,9 @@ class MainWindow(QMainWindow):
         # Tabs
         # =====================================================================
 
-        self.basic                         = BasicConfigWidget()
-        self.fans                          = FanConfigurationsWidget()
-        self.register_write_configurations = RegisterWriteConfigurationsWidget()
+        self.basic                         = BasicConfigWidget(self)
+        self.fans                          = FanConfigurationsWidget(self)
+        self.register_write_configurations = RegisterWriteConfigurationsWidget(self)
 
         self.tab_widget.addTab(self.basic,                         "Basic Configuration")
         self.tab_widget.addTab(self.fans,                          "Fan Configurations")

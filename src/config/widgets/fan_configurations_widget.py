@@ -1,6 +1,6 @@
 class FanConfigurationsWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout
@@ -40,7 +40,7 @@ class FanConfigurationsWidget(QWidget):
         # Fan widget
         # =====================================================================
 
-        widget = FanConfigurationWidget()
+        widget = FanConfigurationWidget(self)
         self.tab_widget.addTab(widget, "Fan 1")
 
     # =========================================================================
@@ -59,7 +59,7 @@ class FanConfigurationsWidget(QWidget):
         self.tab_widget.clear()
 
         if 'FanConfigurations' not in cfg:
-            widget = FanConfigurationWidget()
+            widget = FanConfigurationWidget(self)
             self.tab_widget.addTab(widget, "Fan 1")
             return
 
@@ -69,7 +69,7 @@ class FanConfigurationsWidget(QWidget):
 
         for i, fan_cfg in enumerate(cfg['FanConfigurations']):
             with trace.trace(f'FanConfigurations[{i}]'):
-                widget = FanConfigurationWidget()
+                widget = FanConfigurationWidget(self)
                 self.tab_widget.addTab(widget, "Fan %i" % (i + 1))
                 widget.from_config(fan_cfg, trace, errors)
 
@@ -88,7 +88,7 @@ class FanConfigurationsWidget(QWidget):
     # =========================================================================
 
     def add_button_clicked(self):
-        widget = FanConfigurationWidget()
+        widget = FanConfigurationWidget(self)
         self.tab_widget.addTab(widget, "Fan %i" % (self.tab_widget.count() + 1))
 
     def tab_close_clicked(self, index):

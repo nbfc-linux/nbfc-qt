@@ -1,8 +1,8 @@
 from collections import OrderedDict
 
 class BasicFanConfigWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout

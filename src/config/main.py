@@ -100,6 +100,7 @@ make_qt5_compatible()
 
 class Globals(QObject):
     read_write_words_changed = pyqtSignal(bool)
+    legacy_temperature_thresholds_behaviour_changed = pyqtSignal(bool)
 
     nbfc_client = None
 

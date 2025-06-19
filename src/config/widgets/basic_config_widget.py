@@ -1,8 +1,8 @@
 from collections import OrderedDict
 
 class BasicConfigWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout
@@ -107,6 +107,8 @@ class BasicConfigWidget(QWidget):
         
         self.normal_radio = QRadioButton("Normal", self)
         self.legacy_radio = QRadioButton("Legacy", self)
+        self.normal_radio.clicked.connect(self.normal_radio_clicked)
+        self.legacy_radio.clicked.connect(self.legacy_radio_clicked)
         radio_layout.addWidget(self.normal_radio)
         radio_layout.addWidget(self.legacy_radio)
         self.group_legacy.addButton(self.normal_radio)
@@ -202,3 +204,9 @@ class BasicConfigWidget(QWidget):
 
     def word_radio_clicked(self):
         GLOBALS.read_write_words_changed.emit(True)
+
+    def normal_radio_clicked(self):
+        GLOBALS.legacy_temperature_thresholds_behaviour_changed.emit(False)
+
+    def legacy_radio_clicked(self):
+        GLOBALS.legacy_temperature_thresholds_behaviour_changed.emit(True)

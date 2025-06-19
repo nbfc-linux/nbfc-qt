@@ -72,8 +72,8 @@ class TemperatureThresholdEditWidget(QWidget):
         self.set_fan_speed(dictionary['FanSpeed'])
 
 class TemperatureThresholdsWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout
@@ -142,6 +142,10 @@ class TemperatureThresholdsWidget(QWidget):
         self.del_button.clicked.connect(self.del_button_clicked)
         btn_layout.addWidget(self.del_button)
 
+        self.set_defaults_button = QPushButton("Set defaults", self)
+        self.set_defaults_button.clicked.connect(self.set_defaults_button_clicked)
+        btn_layout.addWidget(self.set_defaults_button)
+
         # =====================================================================
         # Edit
         # =====================================================================
@@ -158,6 +162,7 @@ class TemperatureThresholdsWidget(QWidget):
         self.edit.up_threshold_input.valueChanged.connect(self.up_threshold_changed)
         self.edit.down_threshold_input.valueChanged.connect(self.down_threshold_changed)
         self.edit.fan_speed.valueChanged.connect(self.fan_speed_changed)
+        GLOBALS.legacy_temperature_thresholds_behaviour_changed.connect(self.legacy_temperature_thresholds_behaviour_changed)
 
     # =========================================================================
     # Public functions
@@ -172,6 +177,8 @@ class TemperatureThresholdsWidget(QWidget):
         return r
 
     def from_config(self, cfg, trace, errors):
+        self.table.clear()
+
         if 'TemperatureThresholds' not in cfg:
             return
 
@@ -249,3 +256,26 @@ class TemperatureThresholdsWidget(QWidget):
 
     def del_button_clicked(self):
         self.table.remove_selected_row()
+
+    def set_defaults_button_clicked(self):
+        widget = self
+        while not isinstance(widget, MainWindow):
+            widget = widget.parent()
+
+        basic_config_widget = widget.basic
+        legacy_temperature_thresholds_behaviour = basic_config_widget.legacy_radio.isChecked()
+
+        if legacy_temperature_thresholds_behaviour:
+            self.from_config({'TemperatureThresholds': DEFAULT_LEGACY_TEMPERATURE_THRESHOLDS}, Trace(), [])
+        else:
+            self.from_config({'TemperatureThresholds': DEFAULT_TEMPERATURE_THRESHOLDS}, Trace(), [])
+
+    def legacy_temperature_thresholds_behaviour_changed(self, enabled):
+        config = self.get_config()
+
+        if enabled:
+            if config == DEFAULT_TEMPERATURE_THRESHOLDS:
+                self.from_config({'TemperatureThresholds': DEFAULT_LEGACY_TEMPERATURE_THRESHOLDS}, Trace(), [])
+        else:
+            if config == DEFAULT_LEGACY_TEMPERATURE_THRESHOLDS:
+                self.from_config({'TemperatureThresholds': DEFAULT_TEMPERATURE_THRESHOLDS}, Trace(), [])

@@ -138,8 +138,8 @@ class RegisterWriteConfigurationEdit(QWidget):
         self.set_reset_value(dictionary['ResetValue'])
 
 class RegisterWriteConfigurationsWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout
@@ -274,8 +274,7 @@ class RegisterWriteConfigurationsWidget(QWidget):
         return r
 
     def from_config(self, cfg, trace, errors):
-        for i in range(self.table.rowCount()):
-            self.table.removeRow(0)
+        self.table.clear()
 
         if 'RegisterWriteConfigurations' not in cfg:
             return

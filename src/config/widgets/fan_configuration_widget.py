@@ -1,6 +1,6 @@
 class FanConfigurationWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
         # =====================================================================
         # Layout
@@ -15,9 +15,9 @@ class FanConfigurationWidget(QWidget):
 
         self.tab_widget = QTabWidget(self)
 
-        self.basic_fan_config = BasicFanConfigWidget()
-        self.temperature_thresholds = TemperatureThresholdsWidget()
-        self.fan_speed_percentage_overrides = FanSpeedPercentageOverrides()
+        self.basic_fan_config = BasicFanConfigWidget(self)
+        self.temperature_thresholds = TemperatureThresholdsWidget(self)
+        self.fan_speed_percentage_overrides = FanSpeedPercentageOverrides(self)
 
         self.tab_widget.addTab(self.basic_fan_config, "Basic Configuration")
         self.tab_widget.addTab(self.temperature_thresholds, "Temperature Thresholds")
