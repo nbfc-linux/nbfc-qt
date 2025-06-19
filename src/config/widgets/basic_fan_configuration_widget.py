@@ -131,10 +131,24 @@ class BasicFanConfigWidget(QWidget):
 
         label = QLabel("Temperature sensor", self)
         self.sensor_input = QComboBox(self)
-        self.sensor_input.addItems(["@CPU", "@GPU"])
+        self.sensor_input.addItems(["@CPU", "@GPU", "@CPU + @GPU"])
 
         box.addWidget(label)
         box.addWidget(self.sensor_input)
+
+        # =====================================================================
+        # Temperature Algorithm Type
+        # =====================================================================
+
+        box = QHBoxLayout()
+        layout.addLayout(box)
+
+        label = QLabel("Temperature algorithm type", self)
+        self.algorithm_type = QComboBox(self)
+        self.algorithm_type.addItems(["Average", "Min", "Max"])
+
+        box.addWidget(label)
+        box.addWidget(self.algorithm_type)
 
         # =====================================================================
         # Init
@@ -159,13 +173,14 @@ class BasicFanConfigWidget(QWidget):
         r['MaxSpeedValueRead']           = self.max_fan_speed_read_input.value()
         r['ResetRequired']               = self.grp_reset_required.isChecked()
         r['FanSpeedResetValue']          = self.reset_value.value()
-        r['Sensors']                     = [self.sensor_input.currentText()]
+        r['Sensors']                     = self.sensors_get_config()
+        r['TemperatureAlgorithmType']    = self.algorithm_type.currentText()
 
         if not r['FanDisplayName']:
             del r['FanDisplayName']
 
         if not r['ResetRequired']:
-            del r['ResetValue']
+            del r['FanSpeedResetValue']
 
         if not r['IndependentReadMinMaxValues']:
             del r['MinSpeedValueRead']
@@ -185,6 +200,8 @@ class BasicFanConfigWidget(QWidget):
             'MaxSpeedValueRead':           self.max_fan_speed_read_input.setValue,
             'ResetRequired':               self.grp_reset_required.setChecked,
             'FanSpeedResetValue':          self.reset_value.setValue,
+            'Sensors':                     self.sensors_from_config,
+            'TemperatureAlgorithmType':    self.algorithm_type.setCurrentText,
         }
 
         for key, callback in list(callbacks.items()):
@@ -199,12 +216,40 @@ class BasicFanConfigWidget(QWidget):
 
             del cfg[key]
 
-        if 'Sensors' in cfg:
-            with trace.trace('Sensors'):
-                try:
-                    self.sensor_input.setCurrentText(cfg['Sensors'][0])
-                except Exception:
-                    errors.append(trace.get_trace("Invalid value"))
+    # =========================================================================
+    # Helper functions
+    # =========================================================================
+
+    def sensors_from_config(self, sensors):
+        have_CPU = False
+        have_GPU = False
+
+        for sensor in sensors:
+            if sensor == '@CPU':
+                have_CPU = True
+            elif sensor == '@GPU':
+                have_GPU = True
+
+        if have_CPU and have_GPU:
+            self.sensor_input.setCurrentText('@CPU + @GPU')
+        elif have_CPU:
+            self.sensor_input.setCurrentText('@CPU')
+        elif have_GPU:
+            self.sensor_input.setCurrentText('@GPU')
+        else:
+            self.sensor_input.setCurrentText('@CPU')
+
+    def sensors_get_config(self):
+        text = self.sensor_input.currentText()
+
+        if text == '@CPU':
+            return ['@CPU']
+
+        if text == '@GPU':
+            return ['@GPU']
+
+        if text == '@CPU + @GPU':
+            return ['@CPU', '@GPU']
 
     # =========================================================================
     # Signals
