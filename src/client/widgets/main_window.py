@@ -1,3 +1,61 @@
+import subprocess
+
+class ImageLoaderWorker(QObject):
+    finished = pyqtSignal(bytes)
+
+    def __init__(self, url):
+        super().__init__()
+        self.url = url
+
+    def run(self):
+        try:
+            import requests
+
+            response = requests.get(self.url)
+            response.raise_for_status()
+
+            self.finished.emit(response.content)
+        except Exception:
+            pass
+
+class SponsorWidget(QLabel):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.setVisible(False)
+        self.setMaximumHeight(100)
+        self.setAlignment(Qt.AlignCenter)
+
+        try:
+            sponsor = GLOBALS.nbfc_client.get_model_configuration()['Sponsor']
+            self.url = sponsor['URL']
+
+            if 'Description' in sponsor:
+                self.setToolTip(f"{sponsor['Name']} - {sponsor['Description']}")
+            else:
+                self.setToolTip(sponsor['Name'])
+
+            self.thread = QThread()
+            self.worker = ImageLoaderWorker(sponsor['BannerURL'])
+            self.worker.moveToThread(self.thread)
+            self.thread.started.connect(self.worker.run)
+            self.worker.finished.connect(self.on_image_loaded)
+            self.worker.finished.connect(self.thread.quit)
+            self.thread.start()
+        except Exception:
+            pass
+        
+    def on_image_loaded(self, content):
+        pixmap = QPixmap()
+        pixmap.loadFromData(content)
+        pixmap = pixmap.scaledToHeight(100, Qt.SmoothTransformation)
+        self.setPixmap(pixmap)
+        self.setVisible(True)
+
+    def mousePressEvent(self, event):
+        if self.url:
+            subprocess.run(['xdg-open', self.url])
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -10,10 +68,26 @@ class MainWindow(QMainWindow):
         self.resize(400, 400)
 
         # =====================================================================
+        # Container widget
+        # =====================================================================
+
+        container = QWidget()
+        layout = QVBoxLayout()
+        container.setLayout(layout)
+
+        # =====================================================================
+        # Sponsor widget
+        # =====================================================================
+
+        sponsor_widget = SponsorWidget(self)
+        layout.addWidget(sponsor_widget)
+
+        # =====================================================================
         # Tab widget
         # =====================================================================
 
         self.tab_widget = QTabWidget(self)
+        layout.addWidget(self.tab_widget)
 
         # =====================================================================
         # Tabs
@@ -39,7 +113,7 @@ class MainWindow(QMainWindow):
         # Set widget
         # =====================================================================
 
-        self.setCentralWidget(self.tab_widget)
+        self.setCentralWidget(container)
 
         # =====================================================================
         # Menu

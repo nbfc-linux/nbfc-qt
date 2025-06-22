@@ -14,6 +14,7 @@ def make_qt5_compatible():
     setattr(Qt,          'AlignCenter', Qt.AlignmentFlag.AlignCenter)
     setattr(Qt,          'UserRole',    Qt.ItemDataRole.UserRole)
     setattr(Qt,          'Horizontal',  Qt.Orientation.Horizontal)
+    setattr(Qt,          'SmoothTransformation', Qt.TransformationMode.SmoothTransformation)
     setattr(QMessageBox, 'Ok',          QMessageBox.StandardButton.Ok)
 
 # =============================================================================
@@ -28,7 +29,7 @@ argp = argparse.ArgumentParser(
     epilog=QT_HELP_TEXT,
     formatter_class=argparse.RawDescriptionHelpFormatter)
 
-argp.add_argument('--version', action='version', version='%(prog)s 0.4.2')
+argp.add_argument('--version', action='version', version='%(prog)s 0.4.3')
 
 grp = argp.add_argument_group(title='Widgets')
 
@@ -75,12 +76,13 @@ if opts.qt_version is None:
     try:
         from PyQt6.QtWidgets import *
         from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-        from PyQt6.QtGui import QAction
+        from PyQt6.QtGui import QAction, QPixmap
         make_qt5_compatible()
     except ImportError:
         try:
             from PyQt5.QtWidgets import *
             from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
+            from PyQt5.QtGui import QPixmap
         except ImportError:
             print("Please install Python Qt bindings (PyQt5 or PyQt6)")
             sys.exit(1)
@@ -88,11 +90,12 @@ if opts.qt_version is None:
 elif opts.qt_version == 5:
     from PyQt5.QtWidgets import *
     from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
+    from PyQt5.QtGui import QPixmap
 
 elif opts.qt_version == 6:
     from PyQt6.QtWidgets import *
     from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-    from PyQt6.QtGui import QAction
+    from PyQt6.QtGui import QAction, QPixmap
     make_qt5_compatible()
 #endif
 
