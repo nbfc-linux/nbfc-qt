@@ -40,9 +40,9 @@ grp.add_argument('--qt5',
 grp.add_argument('--qt6',
     help='Use PyQt6',
     dest='qt_version', action='store_const', const=6)
+#endif
 
 opts, qt_args = argp.parse_known_args()
-#endif
 
 # =============================================================================
 # Import Qt5/Qt6
