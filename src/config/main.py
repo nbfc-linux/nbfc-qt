@@ -29,7 +29,7 @@ argp = argparse.ArgumentParser(
     epilog=QT_HELP_TEXT,
     formatter_class=argparse.RawDescriptionHelpFormatter)
 
-argp.add_argument('--version', action='version', version='%(prog)s 0.4.2')
+argp.add_argument('--version', action='version', version='%(prog)s 0.4.3')
 
 argp.add_argument('--import',
     help='Import a existing configuration file',
