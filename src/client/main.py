@@ -102,12 +102,13 @@ elif opts.qt_version == 6:
 #ifeq QT_VERSION 5
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
+from PyQt5.QtGui import QPixmap
 #endif
 
 #ifeq QT_VERSION 6
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QPixmap
 make_qt5_compatible()
 #endif
 
