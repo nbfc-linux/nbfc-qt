@@ -27,11 +27,17 @@ class FanControlWidget(QStackedWidget):
 
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
-        fans_widget = QWidget()
-        self.fans_layout = QVBoxLayout()
-        fans_widget.setLayout(self.fans_layout)
-        self.scroll_area.setWidget(fans_widget)
         self.addWidget(self.scroll_area)
+
+        fans_widget = QWidget()
+        self.scroll_area.setWidget(fans_widget)
+
+        fans_container = QVBoxLayout()
+        fans_widget.setLayout(fans_container)
+
+        self.fans_layout = QVBoxLayout()
+        fans_container.addLayout(self.fans_layout)
+        fans_container.addStretch()
 
     # =========================================================================
     # Widget start / stop
