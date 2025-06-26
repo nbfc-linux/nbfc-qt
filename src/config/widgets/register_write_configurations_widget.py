@@ -190,7 +190,7 @@ class RegisterWriteConfigurationsWidget(QWidget):
         reset_required.setTypes((bool,))
 
         reset_write_mode = MyTableFieldDefinition('ResetWriteMode')
-        write_mode.setDefault('Set')
+        reset_write_mode.setDefault('Set')
         reset_write_mode.setValidate(lambda v: v in ('Set', 'And', 'Or'))
 
         reset_value = MyTableFieldDefinition('ResetValue')
