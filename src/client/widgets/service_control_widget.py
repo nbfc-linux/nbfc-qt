@@ -86,8 +86,11 @@ class ServiceControlWidget(QWidget):
 
     def update(self):
         try:
-            GLOBALS.nbfc_client.get_status()
-            self.status_label.setText("<b>Running</b>")
+            status = GLOBALS.nbfc_client.get_status()
+            if status['ReadOnly']:
+                self.status_label.setText("<b>Running</b> (<i>read-only</i>)")
+            else:
+                self.status_label.setText("<b>Running</b> (<i>control enabled</i>)")
             self.start_button.setEnabled(False)
             self.stop_button.setEnabled(True)
         except Exception as e:
