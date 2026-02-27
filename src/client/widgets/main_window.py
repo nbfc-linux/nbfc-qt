@@ -99,10 +99,12 @@ class MainWindow(QMainWindow):
         self.widgets['basic']   = BasicConfigWidget()
         self.widgets['sensors'] = TemperatureSourcesWidget()
         self.widgets['update']  = UpdateWidget()
+        self.widgets['rated']   = RateConfigsWidget()
 
         self.tab_widget.addTab(self.widgets['service'], "Service")
         self.tab_widget.addTab(self.widgets['fans'],    "Fans")
         self.tab_widget.addTab(self.widgets['basic'],   "Basic Configuration")
+        self.tab_widget.addTab(self.widgets['rated'],   "Rated Configs")
         self.tab_widget.addTab(self.widgets['sensors'], "Sensors")
         self.tab_widget.addTab(self.widgets['update'],  "Update")
 

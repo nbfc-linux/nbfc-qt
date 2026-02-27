@@ -309,6 +309,21 @@ class NbfcClient:
 
         return sensors
 
+    def rate_configs(self):
+        """
+        Returns a list of rated configuration files.
+
+        Returns:
+            The decoded JSON data from `nbfc rate-config --all --json --min-score 0`
+
+        Raises:
+            NbfcClientError:
+                See `call_nbfc` for further information.
+        """
+
+        output = self.call_nbfc(['rate-config', '--all', '--json', '--min-score', '0'])
+        return json.loads(output)
+
     # =========================================================================
     # Methods based on `socket_communicate`
     # =========================================================================

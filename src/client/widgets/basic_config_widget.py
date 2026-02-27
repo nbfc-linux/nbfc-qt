@@ -1,6 +1,41 @@
+CONFIRMATION_TEXT = """\
+You are about to view configurations with names similar to your laptop model. <br />
+<br />
+Please note that similar model names do not guarantee compatibility. The register configuration may be completely different. <br />
+<br />
+Using a configuration that does <b>not exactly match</b> your laptop model can be <b>very dangerous and may cause hardware damage.</b> <br />
+<br />
+Please use the <b>Rated Configs</b> tab to find verified configuration recommendations for your device."""
+
+class ConfirmationDialog(QDialog):
+    def __init__(self, callback, parent=None):
+        super().__init__(parent)
+        self.callback = callback
+        self.setModal(True)
+        self.setWindowTitle("Warning")
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        label = QLabel(CONFIRMATION_TEXT)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+
+        self.checkbox = QCheckBox("I understand the risks")
+        layout.addWidget(self.checkbox)
+
+        button = QPushButton("Close")
+        button.clicked.connect(self.close_clicked)
+        layout.addWidget(button)
+
+    def close_clicked(self):
+        self.callback(self.checkbox.isChecked())
+        self.accept()
+
 class BasicConfigWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.confirmed_risks = False
 
         # =====================================================================
         # Layout
@@ -46,7 +81,7 @@ class BasicConfigWidget(QWidget):
         self.list_all_radio.clicked.connect(self.list_all_radio_checked)
         layout.addWidget(self.list_all_radio)
 
-        self.list_recommended_radio = QRadioButton("List recommended configurations", self)
+        self.list_recommended_radio = QRadioButton("List similar named configurations", self)
         self.list_recommended_radio.clicked.connect(self.list_recommended_radio_checked)
         layout.addWidget(self.list_recommended_radio)
 
@@ -146,24 +181,6 @@ class BasicConfigWidget(QWidget):
 
         self.selected_config_input.setText(SelectedConfigId)
 
-    def save_config(self):
-        '''
-        Save the selected configuration to the service configuration file.
-
-        This may raise an exception.
-        '''
-
-        config = GLOBALS.nbfc_client.get_service_config()
-
-        old_config = config.get('SelectedConfigId', '')
-
-        config['SelectedConfigId'] = self.selected_config_input.text()
-
-        GLOBALS.nbfc_client.set_service_config(config)
-
-        if old_config != config['SelectedConfigId']:
-            GLOBALS.model_config_changed.emit()
-
     # =========================================================================
     # Signal functions
     # =========================================================================
@@ -176,14 +193,16 @@ class BasicConfigWidget(QWidget):
 
     def save_button_clicked(self):
         try:
-            self.save_config()
+            config = self.selected_config_input.text()
+            GLOBALS.set_model_config(config)
         except Exception as e:
             show_error_message(self, "Error", str(e))
 
     def apply_button_clicked(self):
         try:
-            self.save_config()
-            GLOBALS.restart_service.emit(self.apply_buttons_widget.read_only_checkbox.isChecked())
+            config = self.selected_config_input.text()
+            read_only = self.apply_buttons_widget.read_only_checkbox.isChecked()
+            GLOBALS.set_model_config_and_restart(config, read_only)
         except Exception as e:
             show_error_message(self, "Error", str(e))
 
@@ -205,6 +224,18 @@ class BasicConfigWidget(QWidget):
         self.update_configuration_combobox(configs)
 
     def list_recommended_radio_checked(self):
+        if not self.confirmed_risks:
+            def confirmation_dialog_exited(confirmed):
+                if confirmed:
+                    self.confirmed_risks = True
+                    self.list_recommended_radio.setChecked(True)
+                    self.list_recommended_radio_checked()
+
+            self.list_all_radio.setChecked(True)
+            dialog = ConfirmationDialog(confirmation_dialog_exited, self)
+            dialog.exec()
+            return
+
         self.select_file_button.setVisible(False)
         self.configurations_combobox.setVisible(True)
         self.set_button.setVisible(True)

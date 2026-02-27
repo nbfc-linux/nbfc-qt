@@ -45,6 +45,10 @@ grp.add_argument('--basic',
     help='Start with basic configuration widget',
     dest='widget', action='store_const', const='basic')
 
+grp.add_argument('--rated',
+    help='Start with rated configurations widget',
+    dest='widget', action='store_const', const='rated')
+
 grp.add_argument('--sensors',
     help='Start with sensors widget',
     dest='widget', action='store_const', const='sensors')
@@ -132,6 +136,36 @@ class Globals(QObject):
     def init(self):
         self.nbfc_client = NbfcClient()
 
+    def set_model_config(self, model_config):
+        '''
+        Save `model_config` to the service configuration file.
+
+        This may raise an exception.
+        '''
+
+        service_config = self.nbfc_client.get_service_config()
+
+        old_model_config = service_config.get('SelectedConfigId', '')
+
+        service_config['SelectedConfigId'] = model_config
+
+        self.nbfc_client.set_service_config(service_config)
+
+        if old_model_config != model_config:
+            self.model_config_changed.emit()
+
+    def set_model_config_and_restart(self, model_config, read_only):
+        '''
+        Save `model_config` to the service configuration file and restart
+        the service.
+
+        This may raise an exception.
+        '''
+
+        self.set_model_config(model_config)
+        self.restart_service.emit(read_only)
+
+
 REQUIRED_NBFC_VERSION = '0.3.16'
 GITHUB_URL = 'https://github.com/nbfc-linux/nbfc-linux'
 GLOBALS = Globals()
@@ -145,6 +179,7 @@ def show_error_message(parent, title, message):
 #include client/widgets/fan_widget.py
 #include client/widgets/fan_control_widget.py
 #include client/widgets/basic_config_widget.py
+#include client/widgets/rate_configs_widget.py
 #include client/widgets/temperature_source_widget.py
 #include client/widgets/temperature_sources_widget.py
 #include client/widgets/update_widget.py
