@@ -179,6 +179,7 @@ def show_error_message(parent, title, message):
 #include client/widgets/fan_widget.py
 #include client/widgets/fan_control_widget.py
 #include client/widgets/basic_config_widget.py
+#include client/widgets/rate_configs_help_widget.py
 #include client/widgets/rate_configs_widget.py
 #include client/widgets/temperature_source_widget.py
 #include client/widgets/temperature_sources_widget.py

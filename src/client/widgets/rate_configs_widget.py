@@ -199,7 +199,7 @@ class RateConfigsWidget(QWidget):
         self.setLayout(layout)
 
         # =====================================================================
-        # Threshold spin box + Load button
+        # Threshold spin box + Load button + Help button
         # =====================================================================
 
         hbox = QHBoxLayout()
@@ -217,9 +217,13 @@ class RateConfigsWidget(QWidget):
         self.load_button = QPushButton("Load configs")
         self.load_button.clicked.connect(self.load_button_clicked)
 
+        self.help_button = QPushButton("Help")
+        self.help_button.clicked.connect(self.help_button_clicked)
+
         hbox.addWidget(self.threshold_label)
         hbox.addWidget(self.threshold_spin)
         hbox.addWidget(self.load_button)
+        hbox.addWidget(self.help_button)
 
         # =====================================================================
         # Warning label
@@ -309,6 +313,10 @@ class RateConfigsWidget(QWidget):
 
     def load_button_clicked(self):
         self.load_rated_configs_list()
+
+    def help_button_clicked(self):
+        self.help_widget = RateConfigsHelpWidget()
+        self.help_widget.show()
 
     def threshold_spin_changed(self):
         self.warning_label.setVisible(self.threshold_spin.value() < RECOMMENDED_THRESHOLD_MIN)
