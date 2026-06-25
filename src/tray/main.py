@@ -146,11 +146,14 @@ class FanWidget(QWidget):
 
 class FanControlWidget(QWidget):
     def __init__(self):
-        super().__init__(flags=Qt.Popup)
+        super().__init__(None, flags=Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(5, 5, 5, 5)
         self.layout.setSpacing(10)
         self.fan_widgets = []
+
+    def focusOutEvent(self, event):
+        self.hide()
 
     def load(self):
         # Attempt to retrieve status
@@ -188,6 +191,8 @@ class FanControlWidget(QWidget):
         y = max(screen.top(), min(y, screen.bottom() - h))
         self.move(x, y)
         self.show()
+        self.activateWindow()
+        self.raise_()
 
 
 class TrayApp:

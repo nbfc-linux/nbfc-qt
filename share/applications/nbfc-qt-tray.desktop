@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=NBFC Qt Tray
+Comment=NBFC fan control tray icon
+Exec=nbfc-qt-tray
+Icon=nbfc-qt
+Terminal=false
+Type=Application
+Categories=System;Hardware;Settings;
+StartupNotify=false
+NoDisplay=true

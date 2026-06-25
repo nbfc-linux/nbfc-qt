@@ -79,40 +79,40 @@ opts, qt_args = argp.parse_known_args()
 if opts.qt_version is None:
     try:
         from PyQt6.QtWidgets import *
-        from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-        from PyQt6.QtGui import QAction, QPixmap
+        from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+        from PyQt6.QtGui import QAction, QIcon, QPixmap
         make_qt5_compatible()
     except ImportError:
         try:
             from PyQt5.QtWidgets import *
-            from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-            from PyQt5.QtGui import QPixmap
+            from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+            from PyQt5.QtGui import QIcon, QPixmap
         except ImportError:
             print("Please install Python Qt bindings (PyQt5 or PyQt6)")
             sys.exit(1)
 
 elif opts.qt_version == 5:
     from PyQt5.QtWidgets import *
-    from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-    from PyQt5.QtGui import QPixmap
+    from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+    from PyQt5.QtGui import QIcon, QPixmap
 
 elif opts.qt_version == 6:
     from PyQt6.QtWidgets import *
-    from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-    from PyQt6.QtGui import QAction, QPixmap
+    from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+    from PyQt6.QtGui import QAction, QIcon, QPixmap
     make_qt5_compatible()
 #endif
 
 #ifeq QT_VERSION 5
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+from PyQt5.QtGui import QIcon, QPixmap
 #endif
 
 #ifeq QT_VERSION 6
 from PyQt6.QtWidgets import *
-from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal
-from PyQt6.QtGui import QAction, QPixmap
+from PyQt6.QtCore import Qt, QTimer, QThread, QObject, pyqtSignal, QSettings
+from PyQt6.QtGui import QAction, QIcon, QPixmap
 make_qt5_compatible()
 #endif
 

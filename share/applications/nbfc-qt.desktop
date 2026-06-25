@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=NBFC Qt
+Comment=Qt-based GUI for NBFC-Linux fan control
+Exec=nbfc-qt
+Icon=nbfc-qt
+Terminal=false
+Type=Application
+Categories=System;Hardware;Settings;
+StartupNotify=false

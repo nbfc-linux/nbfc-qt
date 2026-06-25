@@ -1,3 +1,28 @@
+class JumpSlider(QSlider):
+    """QSlider that jumps to the click position instead of page step."""
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            if self.orientation() == Qt.Horizontal:
+                pos = event.pos().x()
+            else:
+                pos = event.pos().y()
+
+            # Click on track -> jump to position
+            val = QStyle.sliderValueFromPosition(
+                self.minimum(), self.maximum(), pos,
+                self.width() if self.orientation() == Qt.Horizontal else self.height()
+            )
+            cur = self.value()
+            diff = abs(val - cur)
+            if diff > 1:
+                self.setValue(val)
+
+        super().mousePressEvent(event)
+        # Always emit on press so update_fan_speed disables auto mode
+        self.valueChanged.emit(self.value())
+
+
 class FanWidget(QWidget):
     def __init__(self):
         super().__init__()
@@ -68,7 +93,7 @@ class FanWidget(QWidget):
         # Slider
         # =====================================================================
 
-        self.speed_slider = QSlider(Qt.Horizontal)
+        self.speed_slider = JumpSlider(Qt.Horizontal)
         self.speed_slider.setMinimum(0)
         self.speed_slider.setMaximum(100)
         self.speed_slider.setTickInterval(1)
@@ -76,23 +101,36 @@ class FanWidget(QWidget):
         layout.addWidget(self.speed_slider)
 
     def update_fan_speed(self, *_):
+        # Disable auto mode when user moves the slider
+        if self.sender() == self.speed_slider:
+            self.auto_mode_checkbox.setChecked(False)
+
         auto_mode = self.auto_mode_checkbox.isChecked()
 
         if auto_mode:
-            GLOBALS.nbfc_client.set_fan_speed('auto', self.fan_index)
+            GLOBALS.nbfc_client.set_fan_speed("auto", self.fan_index)
+            op = QGraphicsOpacityEffect()
+            op.setOpacity(0.4)
+            self.speed_slider.setGraphicsEffect(op)
+            self.auto_mode_checkbox.setGraphicsEffect(None)
         else:
             GLOBALS.nbfc_client.set_fan_speed(self.speed_slider.value(), self.fan_index)
-
-        self.speed_slider.setEnabled(not auto_mode)
+            self.speed_slider.setGraphicsEffect(None)
+            op = QGraphicsOpacityEffect()
+            op.setOpacity(0.4)
+            self.auto_mode_checkbox.setGraphicsEffect(op)
 
     def update(self, fan_index, fan_data):
         self.fan_index = fan_index
-        self.name_label.setText(fan_data['Name'])
-        self.temperature_label.setText(f'{fan_data['Temperature']:.2f}')
-        self.auto_mode_label.setText(str(fan_data['AutoMode']))
-        self.critical_label.setText(str(fan_data['Critical']))
-        self.current_speed_label.setText(f'{fan_data['CurrentSpeed']:.2f}')
-        self.target_speed_label.setText(f'{fan_data['TargetSpeed']:.2f}')
-        self.speed_steps_label.setText(str(fan_data['SpeedSteps']))
-        self.auto_mode_checkbox.setChecked(fan_data['AutoMode'])
-        self.speed_slider.setValue(int(fan_data['RequestedSpeed']))
+        self.name_label.setText(fan_data["Name"])
+        self.temperature_label.setText(f"{fan_data['Temperature']:.2f}")
+        self.auto_mode_label.setText(str(fan_data["AutoMode"]))
+        self.critical_label.setText(str(fan_data["Critical"]))
+        self.current_speed_label.setText(f"{fan_data['CurrentSpeed']:.2f}")
+        self.target_speed_label.setText(f"{fan_data['TargetSpeed']:.2f}")
+        self.speed_steps_label.setText(str(fan_data["SpeedSteps"]))
+        self.auto_mode_checkbox.setChecked(fan_data["AutoMode"])
+        # Block signals so setValue doesn't trigger valueChanged -> update_fan_speed
+        self.speed_slider.blockSignals(True)
+        self.speed_slider.setValue(int(fan_data["RequestedSpeed"]))
+        self.speed_slider.blockSignals(False)

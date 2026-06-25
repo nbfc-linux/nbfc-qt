@@ -1,4 +1,5 @@
 bindir = /usr/bin
+datadir = /usr/share
 
 # Set this to the desired Qt-Version (5 or 6).
 # Zero means all versions shall be supported.
@@ -65,12 +66,18 @@ install:
 	install -Dm 755 nbfc-qt.py $(DESTDIR)$(bindir)/nbfc-qt
 	install -Dm 755 nbfc-qt-tray.py $(DESTDIR)$(bindir)/nbfc-qt-tray
 	#install -Dm 755 nbfc-qt-config.py $(DESTDIR)$(bindir)/nbfc-qt-config
+	install -Dm 644 share/applications/nbfc-qt.desktop $(DESTDIR)$(datadir)/applications/nbfc-qt.desktop
+	install -Dm 644 share/applications/nbfc-qt-tray.desktop $(DESTDIR)$(datadir)/applications/nbfc-qt-tray.desktop
+	install -Dm 644 share/icons/hicolor/256x256/apps/nbfc-qt.png $(DESTDIR)$(datadir)/icons/hicolor/256x256/apps/nbfc-qt.png
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/nbfc-qt
 	rm -f $(DESTDIR)$(bindir)/nbfc-qt-tray
 	rm -f $(DESTDIR)$(bindir)/nbfc-qt-config
-	
+	rm -f $(DESTDIR)$(datadir)/applications/nbfc-qt.desktop
+	rm -f $(DESTDIR)$(datadir)/applications/nbfc-qt-tray.desktop
+	rm -f $(DESTDIR)$(datadir)/icons/hicolor/256x256/apps/nbfc-qt.png
+
 clean:
 	rm -rf __pycache__
 	rm -f  nbfc-qt.py nbfc-qt-tray.py nbfc-qt-config.py

@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
+import json
 import os
 import re
-import json
 import socket
 import subprocess
 from collections import namedtuple
 
-Sensor = namedtuple('Sensor', ['name', 'description'])
+Sensor = namedtuple("Sensor", ["name", "description"])
+
 
 class NbfcClientError(Exception):
     pass
+
 
 class NbfcClient:
     """
@@ -26,16 +28,16 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        self.socket_file = self.get_compile_time_variable('socket_file')
-        self.config_file = self.get_compile_time_variable('config_file')
-        self.model_configs_dir = self.get_compile_time_variable('model_configs_dir')
-        self.model_configs_dir_mutable = '/var/lib/nbfc/configs'
+        self.socket_file = self.get_compile_time_variable("socket_file")
+        self.config_file = self.get_compile_time_variable("config_file")
+        self.model_configs_dir = self.get_compile_time_variable("model_configs_dir")
+        self.model_configs_dir_mutable = "/var/lib/nbfc/configs"
 
     # =========================================================================
     # Helper methods
     # =========================================================================
 
-    def call_nbfc(self, args):
+    def call_nbfc(self, args, timeout=5):
         """
         Calls the `nbfc` binary with the given arguments and returns the output.
 
@@ -53,14 +55,24 @@ class NbfcClient:
 
                 - If the client command returns a non-zero exit code.
                   The exception's text is the output written to STDERR.
+
+                - If the command times out.
         """
 
-        command = ['nbfc'] + args
+        command = ["nbfc"] + args
 
         try:
-            result = subprocess.run(command, capture_output=True, text=True, check=False)
+            result = subprocess.run(
+                command, capture_output=True, text=True, check=False, timeout=timeout
+            )
+        except subprocess.TimeoutExpired:
+            raise NbfcClientError(
+                f"Command `nbfc {' '.join(args)}` timed out after {timeout}s"
+            ) from None
         except FileNotFoundError as e:
-            raise NbfcClientError('Could not find the `nbfc` program. Is NBFC-Linux installed?') from e
+            raise NbfcClientError(
+                "Could not find the `nbfc` program. Is NBFC-Linux installed?"
+            ) from e
 
         if result.returncode != 0:
             raise NbfcClientError(result.stderr.rstrip())
@@ -95,16 +107,17 @@ class NbfcClient:
         """
 
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
-
             try:
                 sock.connect(self.socket_file)
             except FileNotFoundError:
-                raise NbfcClientError(f'Could not find {self.socket_file}. Is the service running?') from None
+                raise NbfcClientError(
+                    f"Could not find {self.socket_file}. Is the service running?"
+                ) from None
 
             message = "%s\nEND" % json.dumps(data)
-            sock.sendall(message.encode('utf-8'))
+            sock.sendall(message.encode("utf-8"))
 
-            response = b''
+            response = b""
             while True:
                 data = sock.recv(1024)
                 if not data:
@@ -112,11 +125,11 @@ class NbfcClient:
 
                 response += data
 
-                if b'\nEND' in response:
+                if b"\nEND" in response:
                     break
 
-            response = response.decode('utf-8')
-            response = response.replace('\nEND', '')
+            response = response.decode("utf-8")
+            response = response.replace("\nEND", "")
             response = json.loads(response)
             return response
 
@@ -140,7 +153,7 @@ class NbfcClient:
             NbfcClientError:
                 See `call_nbfc` for further information.
         """
-        return self.call_nbfc(['show-variable', variable])
+        return self.call_nbfc(["show-variable", variable])
 
     def get_version(self):
         """
@@ -155,12 +168,12 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        output = self.call_nbfc(['--version'])
+        output = self.call_nbfc(["--version"])
 
-        match = re.search(r'\d+\.\d+\.\d+', output)
+        match = re.search(r"\d+\.\d+\.\d+", output)
 
         if not match:
-            raise NbfcClientError('Could not extract version')
+            raise NbfcClientError("Could not extract version")
 
         return match[0]
 
@@ -177,10 +190,10 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        args = ['start']
+        args = ["start"]
 
         if readonly:
-            args.append('-r')
+            args.append("-r")
 
         self.call_nbfc(args)
 
@@ -197,10 +210,10 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        args = ['restart']
+        args = ["restart"]
 
         if readonly:
-            args.append('-r')
+            args.append("-r")
 
         self.call_nbfc(args)
 
@@ -213,7 +226,7 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        self.call_nbfc(['stop'])
+        self.call_nbfc(["stop"])
 
     def get_model_name(self):
         """
@@ -228,7 +241,7 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        return self.call_nbfc(['get-model-name'])
+        return self.call_nbfc(["get-model-name"])
 
     def list_configs(self):
         """
@@ -243,11 +256,11 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        configs = self.call_nbfc(['config', '-l'])
+        configs = self.call_nbfc(["config", "-l"])
         configs = configs.strip()
 
         if configs:
-            return configs.split('\n')
+            return configs.split("\n")
         else:
             return []
 
@@ -269,11 +282,11 @@ class NbfcClient:
             of the configurations beyond the string matching.
         """
 
-        configs = self.call_nbfc(['config', '-r'])
+        configs = self.call_nbfc(["config", "-r"])
         configs = configs.strip()
 
         if configs:
-            return configs.split('\n')
+            return configs.split("\n")
         else:
             return []
 
@@ -292,17 +305,17 @@ class NbfcClient:
 
         sensors = []
 
-        output = self.call_nbfc(['complete-sensors'])
+        output = self.call_nbfc(["complete-sensors"])
 
-        for line in output.split('\n'):
-            parts = line.split('\t', maxsplit=1)
+        for line in output.split("\n"):
+            parts = line.split("\t", maxsplit=1)
 
             if len(parts) == 2:
                 name, description = parts
 
                 # This is needed for old version of NBFC-Linux where the
                 # `complete-sensors` outputs a `none` sensor
-                if name == 'none':
+                if name == "none":
                     continue
 
                 sensors.append(Sensor(name, description))
@@ -321,7 +334,7 @@ class NbfcClient:
                 See `call_nbfc` for further information.
         """
 
-        output = self.call_nbfc(['rate-config', '--all', '--json', '--min-score', '0'])
+        output = self.call_nbfc(["rate-config", "--all", "--json", "--min-score", "0"])
         return json.loads(output)
 
     # =========================================================================
@@ -341,10 +354,10 @@ class NbfcClient:
                 If there is an error in the response from the service.
         """
 
-        response = self.socket_communicate({'Command': 'status'})
+        response = self.socket_communicate({"Command": "status"})
 
-        if 'Error' in response:
-            raise NbfcClientError(response['Error'])
+        if "Error" in response:
+            raise NbfcClientError(response["Error"])
 
         return response
 
@@ -366,15 +379,15 @@ class NbfcClient:
                 If there is an error in the response from the service.
         """
 
-        request = {'Command': 'set-fan-speed', 'Speed': speed}
+        request = {"Command": "set-fan-speed", "Speed": speed}
 
         if fan is not None:
-            request['Fan'] = fan
+            request["Fan"] = fan
 
         response = self.socket_communicate(request)
 
-        if 'Error' in response:
-            raise NbfcClientError(response['Error'])
+        if "Error" in response:
+            raise NbfcClientError(response["Error"])
 
     # =========================================================================
     # Methods for accessing / setting the configuration
@@ -400,7 +413,7 @@ class NbfcClient:
         """
 
         try:
-            with open(self.config_file, 'r', encoding='UTF-8') as fh:
+            with open(self.config_file, "r", encoding="UTF-8") as fh:
                 return json.load(fh)
         except FileNotFoundError:
             return {}
@@ -424,7 +437,7 @@ class NbfcClient:
                 If `config` could not be serialized to JSON.
         """
 
-        with open(self.config_file, 'w', encoding='UTF-8') as fh:
+        with open(self.config_file, "w", encoding="UTF-8") as fh:
             json.dump(config, fh, indent=1)
 
     def get_model_configuration_file(self):
@@ -442,23 +455,29 @@ class NbfcClient:
 
         config = self.get_service_config()
 
-        if 'SelectedConfigId' not in config:
-            raise NbfcClientError('Configuration has no model configuration ("SelectedConfigId") set')
+        if "SelectedConfigId" not in config:
+            raise NbfcClientError(
+                'Configuration has no model configuration ("SelectedConfigId") set'
+            )
 
-        config_id = config['SelectedConfigId']
+        config_id = config["SelectedConfigId"]
 
-        if config_id.startswith('/'):
+        if config_id.startswith("/"):
             return config_id
 
-        model_config_path = os.path.join(self.model_configs_dir_mutable, config_id + '.json')
+        model_config_path = os.path.join(
+            self.model_configs_dir_mutable, config_id + ".json"
+        )
         if os.path.exists(model_config_path):
             return model_config_path
 
-        model_config_path = os.path.join(self.model_configs_dir, config_id + '.json')
+        model_config_path = os.path.join(self.model_configs_dir, config_id + ".json")
         if os.path.exists(model_config_path):
             return model_config_path
 
-        raise NbfcClientError(f'No configuration file found for SelectedConfigId = "{config_id}"')
+        raise NbfcClientError(
+            f'No configuration file found for SelectedConfigId = "{config_id}"'
+        )
 
     def get_model_configuration(self):
         """
@@ -484,5 +503,5 @@ class NbfcClient:
 
         config_file = self.get_model_configuration_file()
 
-        with open(config_file, 'r', encoding='UTF-8') as fh:
+        with open(config_file, "r", encoding="UTF-8") as fh:
             return json.load(fh)

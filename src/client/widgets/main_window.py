@@ -1,5 +1,6 @@
 import subprocess
 
+
 class ImageLoaderWorker(QObject):
     finished = pyqtSignal(bytes)
 
@@ -18,6 +19,7 @@ class ImageLoaderWorker(QObject):
         except Exception:
             pass
 
+
 class SponsorWidget(QLabel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -27,16 +29,16 @@ class SponsorWidget(QLabel):
         self.setAlignment(Qt.AlignCenter)
 
         try:
-            sponsor = GLOBALS.nbfc_client.get_model_configuration()['Sponsor']
-            self.url = sponsor['URL']
+            sponsor = GLOBALS.nbfc_client.get_model_configuration()["Sponsor"]
+            self.url = sponsor["URL"]
 
-            if 'Description' in sponsor:
+            if "Description" in sponsor:
                 self.setToolTip(f"{sponsor['Name']} - {sponsor['Description']}")
             else:
-                self.setToolTip(sponsor['Name'])
+                self.setToolTip(sponsor["Name"])
 
             self.thread = QThread()
-            self.worker = ImageLoaderWorker(sponsor['BannerURL'])
+            self.worker = ImageLoaderWorker(sponsor["BannerURL"])
             self.worker.moveToThread(self.thread)
             self.thread.started.connect(self.worker.run)
             self.worker.finished.connect(self.on_image_loaded)
@@ -44,7 +46,7 @@ class SponsorWidget(QLabel):
             self.thread.start()
         except Exception:
             pass
-        
+
     def on_image_loaded(self, content):
         pixmap = QPixmap()
         pixmap.loadFromData(content)
@@ -54,7 +56,8 @@ class SponsorWidget(QLabel):
 
     def mousePressEvent(self, event):
         if self.url:
-            subprocess.run(['xdg-open', self.url])
+            subprocess.run(["xdg-open", self.url])
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -66,6 +69,15 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("NBFC Client")
         self.resize(400, 400)
+        self.setWindowIcon(QIcon.fromTheme("nbfc-qt"))
+
+        # Restore window geometry from previous session
+        settings = QSettings("nbfc-qt", "nbfc-qt")
+        geom = settings.value("window/geometry")
+        if geom is not None:
+            self.restoreGeometry(geom)
+        else:
+            self.resize(400, 400)
 
         # =====================================================================
         # Container widget
@@ -94,22 +106,28 @@ class MainWindow(QMainWindow):
         # =====================================================================
 
         self.widgets = {}
-        self.widgets['service'] = ServiceControlWidget()
-        self.widgets['fans']    = FanControlWidget()
-        self.widgets['basic']   = BasicConfigWidget()
-        self.widgets['sensors'] = TemperatureSourcesWidget()
-        self.widgets['update']  = UpdateWidget()
-        self.widgets['rated']   = RateConfigsWidget()
+        self.widgets["service"] = ServiceControlWidget()
+        self.widgets["fans"] = FanControlWidget()
+        self.widgets["basic"] = BasicConfigWidget()
+        self.widgets["sensors"] = TemperatureSourcesWidget()
+        self.widgets["update"] = UpdateWidget()
+        self.widgets["rated"] = RateConfigsWidget()
 
-        self.tab_widget.addTab(self.widgets['service'], "Service")
-        self.tab_widget.addTab(self.widgets['fans'],    "Fans")
-        self.tab_widget.addTab(self.widgets['basic'],   "Basic Configuration")
-        self.tab_widget.addTab(self.widgets['rated'],   "Rated Configs")
-        self.tab_widget.addTab(self.widgets['sensors'], "Sensors")
-        self.tab_widget.addTab(self.widgets['update'],  "Update")
+        self.tab_widget.addTab(self.widgets["service"], "Service")
+        self.tab_widget.addTab(self.widgets["fans"], "Fans")
+        self.tab_widget.addTab(self.widgets["basic"], "Basic Configuration")
+        self.tab_widget.addTab(self.widgets["rated"], "Rated Configs")
+        self.tab_widget.addTab(self.widgets["sensors"], "Sensors")
+        self.tab_widget.addTab(self.widgets["update"], "Update")
+
+        settings = QSettings("nbfc-qt", "nbfc-qt")
+        initial_tab = int(settings.value("window/active_tab", 0))
+        if initial_tab >= self.tab_widget.count():
+            initial_tab = 0
 
         self.tab_widget.currentChanged.connect(self.tab_widget_changed)
-        self.tab_widget_changed(0)
+        self.tab_widget.setCurrentIndex(initial_tab)
+        self.tab_widget_changed(initial_tab)
 
         # =====================================================================
         # Set widget
@@ -134,6 +152,15 @@ class MainWindow(QMainWindow):
         applicationMenu.addAction(quitAction)
 
     # =========================================================================
+    # Events
+    # =========================================================================
+
+    def closeEvent(self, event):
+        settings = QSettings("nbfc-qt", "nbfc-qt")
+        settings.setValue("window/geometry", self.saveGeometry())
+        super().closeEvent(event)
+
+    # =========================================================================
     # Public functions
     # =========================================================================
 
@@ -154,3 +181,7 @@ class MainWindow(QMainWindow):
                 widget.start()
             else:
                 widget.stop()
+
+        # Remember last active tab
+        settings = QSettings("nbfc-qt", "nbfc-qt")
+        settings.setValue("window/active_tab", current_index)
