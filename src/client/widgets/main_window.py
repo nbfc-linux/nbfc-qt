@@ -31,7 +31,7 @@ class SponsorWidget(QLabel):
             self.url = sponsor['URL']
 
             if 'Description' in sponsor:
-                self.setToolTip(f"{sponsor['Name']} - {sponsor['Description']}")
+                self.setToolTip(f'{sponsor["Name"]} - {sponsor["Description"]}')
             else:
                 self.setToolTip(sponsor['Name'])
 

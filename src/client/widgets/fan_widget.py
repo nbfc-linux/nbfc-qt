@@ -88,11 +88,11 @@ class FanWidget(QWidget):
     def update(self, fan_index, fan_data):
         self.fan_index = fan_index
         self.name_label.setText(fan_data['Name'])
-        self.temperature_label.setText(f'{fan_data['Temperature']:.2f}')
+        self.temperature_label.setText(f'{fan_data["Temperature"]:.2f}')
         self.auto_mode_label.setText(str(fan_data['AutoMode']))
         self.critical_label.setText(str(fan_data['Critical']))
-        self.current_speed_label.setText(f'{fan_data['CurrentSpeed']:.2f}')
-        self.target_speed_label.setText(f'{fan_data['TargetSpeed']:.2f}')
+        self.current_speed_label.setText(f'{fan_data["CurrentSpeed"]:.2f}')
+        self.target_speed_label.setText(f'{fan_data["TargetSpeed"]:.2f}')
         self.speed_steps_label.setText(str(fan_data['SpeedSteps']))
         self.auto_mode_checkbox.setChecked(fan_data['AutoMode'])
         self.speed_slider.setValue(int(fan_data['RequestedSpeed']))
